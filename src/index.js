@@ -7,7 +7,11 @@ class Site {
         try {
             if (!this.boards.length) {
                 Board.chkBoard = true;
-                this.boards.push({boardName : Board.boardName, chkBoard: Board.chkBoard});
+                this.boards.push({
+                    boardName : Board.boardName, 
+                    chkBoard: Board.chkBoard, 
+                    articles: [],
+                    });
                 return;
             } else {
                 for(let i = 0; i<this.boards.length; i++) {
@@ -16,7 +20,11 @@ class Site {
                     }
                 }
                 Board.chkBoard = true;
-                this.boards.push({boardName: Board.boardName, chkBoard: Board.chkBoard});
+                this.boards.push({
+                    boardName : Board.boardName, 
+                    chkBoard: Board.chkBoard,
+                    articles: [], 
+                    });
                 return 
             }
         } catch {
@@ -27,45 +35,68 @@ class Site {
     findBoardByName (findName) {
         for(let i = 0; i<this.boards.length; i++) {
             if(this.boards[i]["boardName"]==findName) {
-                return this.boards[i];
+                const selectedBoard = new Board(findName);
+                selectedBoard.chkBoard = true;
+                return selectedBoard;   // Board 객체를 반환해야 다음번에 function을 사용 할 수 있다.
             }
         }
-    };  
+    }; 
 }
 
 class Board {
     constructor (boardName) {
         try {
             if(boardName==null) {
-                throw Error;
+                throw new Error();
             } else if (boardName=="") {
-                throw Error;
+                throw new Error();
             }
             this.boardName = boardName;
             this.chkBoard = false;
+            this.articles = [];
         } catch {
-            throw Error;
+            throw new Error();
         }
     }
 
     publish (Article) {
         try {
             if(!this.chkBoard) {
-                throw Error;
+                throw new Error();
             }
-            this.article = Article;           
+            this.articles.push(Article);
+            Article.id = `${this.boardName}-${Math.random()}`;
+            Article.createdDate = new Date().toISOString();
         } catch {
-            throw Error;
+            throw new Error();
         }
+    }
+
+    getAllArticles() {
+        return this.articles;
     }
 }
 
 class Article {
     constructor ({ subject, content, author }) {
-        this.subject = subject;
-        this.content = content;
-        this.author = author;
+        try {
+            if(!subject || subject =="") {
+                throw new Error();
+            } else if(!content || content == "") {
+                throw new Error();
+            } else if(!author || author == "") {
+                throw new Error();
+            }
+            this.subject = subject;
+            this.content = content;
+            this.author = author;
+        } catch {
+            throw new Error();
+        }
     }
+
+    
+
 }
 
 class Comment {
