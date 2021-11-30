@@ -1,42 +1,67 @@
 class Site {
     constructor () {
-        this.addedBoardArray = [];
+        this.boards = [];
     };
 
-    addBoard(Board) {
+    addBoard (Board) {
         try {
-            if (this.addedBoardArray.length==0) {
-                this.addedBoardArray.push({boardName : Board.boardName});
-                return this.addedBoardArray[this.addedBoardArray.length-1];
+            if (!this.boards.length) {
+                this.boards.push({boardName : Board.boardName});
+                return;
             } else {
-                if (this.boardName == Board.boardName) {
-                    throw Error;
-                } else {
-                    this.addedBoardArray.push({boardName : Board.boardName});
-                    return this.addedBoardArray;
+                for(let i = 0; i<this.boards.length; i++) {
+                    if(this.boards[i]["boardName"] == Board.boardName) {
+                        throw Error;
+                    }
                 }
+                this.boards.push({boardName : Board.boardName});
+                return 
             }
+        } catch {
+            throw Error;
+        }
+    };
+
+    findBoardByName (findName) {
+        for(let i = 0; i<this.boards.length; i++) {
+            if(this.boards[i]["boardName"]==findName) {
+                return this.boards[i]
+            }
+        }
+    };  
+}
+
+class Board extends Site {
+    constructor (boardName) {
+        try {
+            if(boardName==null) {
+                throw Error;
+            } else if (boardName=="") {
+                throw Error;
+            }
+            this.boardName = boardName;
+        } catch {
+            throw Error;
+        }
+    }
+
+    publish (Article) {
+        const existBoard = super.findBoardByName(this)
+        try {
+            if(!existBoard) {
+                throw Error;
+            }
+            this.article = Article;
+            
         } catch {
             throw Error;
         }
     }
 }
 
-class Board {
-    constructor (boardName) {
-        this.boardName = boardName;
-    }
 
-
-    
-}
 
 const mySite = new Site();
 const noticeBoard = new Board('공지사항');
-const faqBoard = new Board('FAQ');
-
-mySite.addBoard(noticeBoard);
-mySite.addBoard(faqBoard);
 
 console.log(noticeBoard)
-console.log(mySite)

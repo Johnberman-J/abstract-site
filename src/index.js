@@ -3,7 +3,7 @@ class Site {
         this.boards = [];
     };
 
-    addBoard(Board) {
+    addBoard (Board) {
         try {
             if (!this.boards.length) {
                 this.boards.push({boardName : Board.boardName});
@@ -22,7 +22,7 @@ class Site {
         }
     };
 
-    findBoardByName(findName) {
+    findBoardByName (findName) {
         for(let i = 0; i<this.boards.length; i++) {
             if(this.boards[i]["boardName"]==findName) {
                 return this.boards[i]
@@ -33,15 +33,33 @@ class Site {
 
 class Board {
     constructor (boardName) {
-        this.boardName = boardName;
+        try {
+            if(boardName==null) {
+                throw Error;
+            } else if (boardName=="") {
+                throw Error;
+            }
+            this.boardName = boardName;
+        } catch {
+            throw Error;
+        }
     }
 
-
-    
+    publish (Article) {
+        try {
+            if(!existBoard) {
+                throw Error;
+            }
+            this.article = Article;
+            
+        } catch {
+            throw Error;
+        }
+    }
 }
 
 class Article {
-    constructor (subject, content, author) {
+    constructor ({ subject, content, author }) {
         this.subject = subject;
         this.content = content;
         this.author = author;
