@@ -6,26 +6,28 @@ class Site {
     addBoard (Board) {
         try {
             if (!this.boards.length) {
-                this.boards.push({boardName : Board.boardName});
+                Board.chkBoard = true;
+                this.boards.push({boardName : Board.boardName, chkBoard: Board.chkBoard});
                 return;
             } else {
                 for(let i = 0; i<this.boards.length; i++) {
                     if(this.boards[i]["boardName"] == Board.boardName) {
-                        throw Error;
+                        throw new Error();
                     }
                 }
-                this.boards.push({boardName : Board.boardName});
+                Board.chkBoard = true;
+                this.boards.push({boardName: Board.boardName, chkBoard: Board.chkBoard});
                 return 
             }
         } catch {
-            throw Error;
+            throw new Error();
         }
     };
 
     findBoardByName (findName) {
         for(let i = 0; i<this.boards.length; i++) {
             if(this.boards[i]["boardName"]==findName) {
-                return this.boards[i]
+                return this.boards[i];
             }
         }
     };  
@@ -40,6 +42,7 @@ class Board {
                 throw Error;
             }
             this.boardName = boardName;
+            this.chkBoard = false;
         } catch {
             throw Error;
         }
@@ -47,11 +50,10 @@ class Board {
 
     publish (Article) {
         try {
-            if(!existBoard) {
+            if(!this.chkBoard) {
                 throw Error;
             }
-            this.article = Article;
-            
+            this.article = Article;           
         } catch {
             throw Error;
         }
