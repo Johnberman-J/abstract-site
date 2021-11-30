@@ -67,6 +67,8 @@ class Board {
             this.articles.push(Article);
             Article.id = `${this.boardName}-${Math.random()}`;
             Article.createdDate = new Date().toISOString();
+            Article.chkArticle = true;
+            return Article;
         } catch {
             throw new Error();
         }
@@ -90,19 +92,43 @@ class Article {
             this.subject = subject;
             this.content = content;
             this.author = author;
+            this.chkArticle = false;
+            this.comment = [];
         } catch {
             throw new Error();
         }
     }
 
-    
+    reply(addComment) {
+        try {
+            if(!this.chkArticle) {
+                throw new Error();
+            }
+            this.comment.push(addComment);
+            addComment.createdDate = new Date().toISOString();
+        } catch {
+            throw new Error();
+        }
+    }
 
+    getAllComments() {
+        return this.comment;
+    }
 }
 
 class Comment {
-    constructor (content, author) {
-        this.content = content;
-        this.author = author;
+    constructor ({content, author}) {
+        try {
+            if(!content || content == "") {
+                throw new Error();
+            } else if(!author || author=="") {
+                throw new Error();
+            }
+            this.content = content;
+            this.author = author;
+        } catch {
+            throw new Error();
+        }
     }
 }
 

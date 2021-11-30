@@ -36,10 +36,12 @@ class Site {
         for(let i = 0; i<this.boards.length; i++) {
             if(this.boards[i]["boardName"]==findName) {
                 const selectedBoard = new Board(findName);
-                return selectedBoard;
+                selectedBoard.chkBoard = true;
+                selectedBoard.articles = this.boards.articles;
+                return selectedBoard;   // Board 객체를 반환해야 다음번에 function을 사용 할 수 있다.
             }
         }
-    };  
+    }; 
 }
 
 class Board {
@@ -66,13 +68,15 @@ class Board {
             this.articles.push(Article);
             Article.id = `${this.boardName}-${Math.random()}`;
             Article.createdDate = new Date().toISOString();
+            Article.chkArticle = true;
+            return Article;
         } catch {
             throw new Error();
         }
     }
 
     getAllArticles() {
-        return this.articles;
+       return this.articles;
     }
 }
 
@@ -89,17 +93,46 @@ class Article {
             this.subject = subject;
             this.content = content;
             this.author = author;
+            this.chkArticle = false;
+            this.id = "";
+            this.createDate = "";
+            this.comment = [];
         } catch {
             throw new Error();
         }
-        
+    }
+
+    reply(addComment) {
+        try {
+            if(!this.chkArticle) {
+                throw new Error();
+            }
+            this.comment.push(addComment);
+            addComment.createdDate = new Date().toISOString();
+        } catch {
+            throw new Error();
+        }
+    }
+
+    getAllComments() {
+        return this.comment;
     }
 }
 
 class Comment {
-    constructor (content, author) {
-        this.content = content;
-        this.author = author;
+    constructor ({content, author}) {
+        try {
+            if(!content || content == "") {
+                throw new Error();
+            } else if(!author || author=="") {
+                throw new Error();
+            }
+            this.content = content;
+            this.author = author;
+            // this.createdDate = "";
+        } catch {
+            throw new Error();
+        }
     }
 }
 
@@ -110,10 +143,22 @@ module.exports = {
     Comment,
 };
 
-
-const mySite = new Site();
+mySite = new Site();
 const noticeBoard = new Board('공지사항');
-
 mySite.addBoard(noticeBoard);
 
-console.log(mySite.findBoardByName("공지사항"));
+const article = new Article({
+subject: '첫번째 공지사항입니다.',
+content: '테스트 코드는 수정하면 안됩니다.',
+author: '강승현',
+});
+
+noticeBoard.publish(article);
+
+const findingBoard = mySite.findBoardByName('공지사항');
+console.log(findingBoard);
+const [articles] = findingBoard.getAllArticles();
+
+console.log([articles])
+
+
